@@ -70,6 +70,7 @@ class Main {
         else {
             System.out.println("Znaleziono: ");
             System.out.println(wanted.ToString());
+          //
         }
     }
 }
