@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 class WrongStudentName extends Exception { }
+class WrongAge extends Exception { }
+class Wrongdate extends Exception { }
 
 class Main {
     public static Scanner scan = new Scanner(System.in);
@@ -21,6 +23,12 @@ class Main {
             } catch(WrongStudentName e) {
                 System.out.println("Błędne imie studenta!");
             }
+              catch(WrongAge e) {
+                System.out.println("Błędny wiek!");
+            }
+          catch(Wrongdate e) {
+                System.out.println("Błędna data!");
+            }
         }
     }
 
@@ -39,20 +47,63 @@ class Main {
         String name = scan.nextLine();
         if(name.contains(" "))
             throw new WrongStudentName();
-
         return name;
     }
 
-    public static void exercise1() throws IOException, WrongStudentName {
-        var name = ReadName();
-        System.out.println("Podaj wiek: ");
-        var age = scan.nextInt();
+    public static int ReadAge() throws WrongAge {
+          //scan.nextInt();
+          System.out.println("Podaj wiek: ");
+          int age = scan.nextInt();
+          if(age > 110 || age < 1)
+              throw new WrongAge();
+          return age;
+      }
+
+   public static String ReadData() throws Wrongdate {
         scan.nextLine();
-        System.out.println("Podaj datę urodzenia DD-MM-YYY");
-        var date = scan.nextLine();
+        System.out.println("Podaj date: ");
+        String date = scan.nextLine();
+
+            //!!!!!!!!!!!!!!(DD-MM-RRRR)!!!!!!!!!
+     String data_dzien = date.substring(0, 2);
+     String data_miesiac = date.substring(3, 5);
+     String data_rok = date.substring(6, 10);
+
+      int int_dzien = Integer.parseInt(data_dzien);
+      int int_miesiac = Integer.parseInt(data_miesiac);
+      int int_rok = Integer.parseInt(data_rok);
+      
+     
+    System.out.println("Wpisane: dzień " + int_dzien + ",  miesiąc " + int_miesiac + ",  rok "+ int_rok);
+
+
+     
+        if(date.contains(" ") || date.length() != 10 || date.charAt(2) != '-'|| date.charAt(5) != '-'|| int_dzien > 31 || int_miesiac> 12 || int_rok > 2050  ) 
+            throw new Wrongdate();
+        return date;
+    }
+
+  
+  
+    public static void exercise1() throws IOException, WrongStudentName,WrongAge,Wrongdate {
+        var name = ReadName();
+      // System.out.println("Podaj wiek: ");
+     //   var age = scan.nextInt();
+        var age = ReadAge();
+      
+       // scan.nextLine(); 
+      //  System.out.println("Podaj datę urodzenia DD-MM-YYY");
+        var date = ReadData();
+      //
         (new Service()).addStudent(new Student(name, age, date));
     }
 
+
+
+
+
+
+  
     public static void exercise2() throws IOException {
         var students = (new Service()).getStudents();
         for(Student current : students) {
@@ -70,7 +121,7 @@ class Main {
         else {
             System.out.println("Znaleziono: ");
             System.out.println(wanted.ToString());
-          //
+
         }
     }
 }
